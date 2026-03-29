@@ -24,6 +24,22 @@ Track transaction history
 👥 Manage active users
 ⚙️ Full control over booking system
 
+## 📁 Project Structure
+
+ACE Studio follows a clean and organized folder structure:
+
+ACE-Studio/
+│
+├── app/                  # Backend logic and modules
+├── static/               # CSS, JavaScript, Images
+├── templates/            # HTML files (UI)
+├── database/             # SQL database files
+├── screenshots/          # Project screenshots
+├── main.py               # Main application file
+├── requirements.txt      # Dependencies
+└── README.md             # Documentation
+
+
 #Tech Stack
 Python
 SQL
