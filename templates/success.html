@@ -1,0 +1,122 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-profile{% endblock %}
+{% block content %}
+
+<style>
+.success-wrapper {
+    display: flex;
+    min-height: 80vh;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: industrialFade 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.success-card {
+    width: 100%;
+    max-width: 600px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 4rem;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(0, 255, 136, 0.05); /* Slight green glow for success */
+}
+
+.success-card::before {
+    content: '[ SYSTEM_CONFIRMATION_v1.0 ]';
+    position: absolute;
+    top: -1.5rem;
+    left: 0;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.6rem;
+    color: #00ff88;
+    letter-spacing: 2px;
+}
+
+.success-icon {
+    font-size: 6rem;
+    color: #00ff88;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+}
+
+.success-card h1 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    word-spacing: 5px;
+    letter-spacing: 8px;
+    color: var(--text-main);
+}
+
+.success-msg {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin-bottom: 3.5rem;
+    background: rgba(0, 255, 136, 0.05);
+    padding: 1.5rem;
+    border-left: 2px solid #00ff88;
+}
+
+.success-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.btn-success-main {
+    padding: 1.2rem;
+    font-size: 1rem;
+    border-color: var(--orange-primary);
+    color: var(--orange-primary);
+    background: rgba(255, 77, 0, 0.1);
+}
+
+.btn-success-sub {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 2px;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+.btn-success-sub:hover {
+    color: var(--orange-primary);
+    opacity: 1;
+}
+
+</style>
+
+<div class="success-wrapper">
+    <div class="success-card glass-panel">
+        <div class="success-icon">âœ“</div>
+        <h1>SUCCESS_CONFIRMED</h1>
+        
+        <div class="success-msg">
+            {{ message|default:"YOUR ACTION HAS BEEN SUCCESSFULLY COMPLETED IN THE SYSTEM." }}
+        </div>
+        
+        <div class="success-controls">
+            <a href="{% url 'dashboard' %}" class="btn-industrial btn-success-main michroma">
+                RETURN_TO_SYSTEM_DASHBOARD_âž”
+            </a>
+            <a href="{% url 'profile' %}" class="btn-success-sub">
+                VIEW_SESSION_LOGS_
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+

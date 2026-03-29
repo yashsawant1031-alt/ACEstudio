@@ -1,0 +1,142 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-auth{% endblock %}
+{% block content %}
+
+<style>
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    animation: industrialFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 3.5rem;
+    position: relative;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+
+.auth-card::before {
+    content: '[ TERMINAL_ACCESS_01 ]';
+    position: absolute;
+    top: -1.5rem;
+    left: 0;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.6rem;
+    color: var(--orange-primary);
+    letter-spacing: 3px;
+    opacity: 0.6;
+}
+
+.auth-card h2 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+    letter-spacing: 12px;
+    color: var(--text-main);
+    text-shadow: 0 0 20px rgba(255, 77, 0, 0.2);
+}
+
+.cyber-form p {
+    margin-bottom: 2rem;
+}
+
+.cyber-form label {
+    display: block;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-bottom: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.cyber-form input {
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--border-dim);
+    color: var(--text-main);
+    padding: 1rem;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: 0.4s;
+}
+
+.cyber-form input:focus {
+    border-color: var(--orange-primary);
+    box-shadow: 0 0 30px rgba(255, 77, 0, 0.15);
+    background: rgba(255, 77, 0, 0.02);
+}
+
+.auth-submit-btn {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 1.2rem;
+    font-size: 1rem;
+    border-color: var(--orange-primary);
+    color: var(--orange-primary);
+}
+
+.auth-links {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+}
+
+.auth-link-item {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: 0.3s;
+    opacity: 0.5;
+}
+
+.auth-link-item:hover {
+    color: var(--orange-primary);
+    opacity: 1;
+}
+
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-card glass-panel">
+        <h2>SIGN_IN_</h2>
+        
+        {% if login_form.errors %}
+            <div class="error-list">
+                {% for field, errors in login_form.errors.items %}
+                    <strong>LOGIN_FAILURE:</strong> {{ errors|striptags }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login_view' %}" class="cyber-form">
+            {% csrf_token %}
+            {{ login_form.as_p }}
+            <button type="submit" class="btn-industrial auth-submit-btn">
+                AUTHENTICATE_SESSION_
+            </button>
+        </form>
+
+        <div class="auth-links">
+            <a href="{% url 'register_view' %}" class="auth-link-item">[ CREATE_NEW_IDENTITY ]</a>
+            <a href="{% url 'forgot_password' %}" class="auth-link-item">[ RECOVERY_KEY? ]</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+

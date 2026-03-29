@@ -1,0 +1,147 @@
+﻿{% extends "base.html" %}
+{% load static %}
+{% block bg_class %}bg-booking{% endblock %}
+{% block content %}
+
+<style>
+.booking-section {
+    max-width: 1100px;
+    margin: 5rem auto;
+    padding: 0 2rem;
+    animation: industrialFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.booking-header {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.booking-header h1 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 12px;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+    text-shadow: 0 0 30px rgba(255, 77, 0, 0.2);
+}
+
+.booking-header p {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.7rem;
+    color: var(--orange-primary);
+    opacity: 0.6;
+    letter-spacing: 3px;
+}
+
+.screen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 3rem;
+}
+
+.screen-card-industrial {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 3rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.screen-card-industrial::before {
+    content: '[ ARENA_IDENTIFIER ]';
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.55rem;
+    color: var(--orange-primary);
+    opacity: 0.4;
+}
+
+.screen-card-industrial:hover {
+    border-color: var(--orange-primary);
+    background: rgba(255, 77, 0, 0.08);
+    box-shadow: 0 0 50px rgba(255, 77, 0, 0.2);
+    transform: translateY(-10px);
+}
+
+.screen-card-industrial .icon {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+}
+
+.screen-card-industrial .label {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+}
+
+.screen-card-industrial .id {
+    font-size: 3rem;
+    color: var(--text-main);
+    margin: 1rem 0;
+    text-shadow: 0 0 15px rgba(255, 77, 0, 0.3);
+}
+
+.screen-card-industrial .station-info {
+    font-size: 0.75rem;
+    color: var(--orange-primary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.screen-card-industrial .btn-mock {
+    margin-top: 2rem;
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.7rem;
+    color: var(--orange-primary);
+    border: 1px solid var(--border-orange);
+    padding: 0.5rem 1.2rem;
+    letter-spacing: 2px;
+}
+
+</style>
+
+<div class="booking-section">
+    <div class='top-nav' style='display: flex; justify-content: flex-start; margin-bottom: 2rem;'><a href='{% url "dashboard" %}' class='hub-link' style='color: var(--text-dim); text-decoration: none; font-family: "Syncopate", sans-serif; font-size: 0.7rem; letter-spacing: 3px; padding: 0.8rem 1.5rem; border: 1px solid var(--border-dim); transition: 0.4s;'>[ BACK_TO_DASHBOARD ]</a></div>
+    <div class="booking-header">
+        <h1>SELECT_ARENA</h1>
+        <p>[ CHOOSE_A_TERMINAL_TO_VIEW_AVAILABILITY ]</p>
+    </div>
+
+    <div class="screen-grid">
+        {% for screen in screens %}
+        <a href="{% url 'book_screen' screen.id %}" class="screen-card-industrial">
+            <div class="icon"></div>
+            <div class="label michroma">SCREEN_ID_</div>
+            <div class="id">{{ screen.id }}</div>
+            <div class="station-info michroma">{{ screen.color }} Station</div>
+            <div class="btn-mock">BOOK_NOW_</div>
+        </a>
+        {% empty %}
+        <div class="empty-state michroma" style="text-align:center; padding: 4rem; opacity: 0.4; grid-column: 1/-1;">
+            NO_OPERATIONAL_ARENAS_DETECTED
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+

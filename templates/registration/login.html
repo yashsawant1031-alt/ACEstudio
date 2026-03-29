@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}SG_STUDIO | Login{% endblock %}
+{% block content %}
+<div class="glass-panel form-panel auth-panel">
+    <h2>SYSTEM_LOGIN_</h2>
+    <form method="post" class="cyber-form">
+        {% csrf_token %}
+        <p>
+            <label>PHONE_NUMBER:</label>
+            <input type="text" name="username" required>
+        </p>
+        <p>
+            <label>PASSWORD_KEY:</label>
+            <input type="password" name="password" required>
+        </p>
+        <button type="submit" class="btn-neon submit-btn">AUTHENTICATE</button>
+    </form>
+    <p>New Entity? <a href="{% url 'register' %}">INITIALIZE</a></p>
+</div>
+{% endblock %}

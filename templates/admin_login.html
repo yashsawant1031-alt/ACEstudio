@@ -1,0 +1,150 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-admin-portal{% endblock %}
+{% block content %}
+
+<style>
+.admin-login-wrapper {
+    display: flex;
+    min-height: 80vh;
+    align-items: center;
+    justify-content: center;
+    animation: industrialFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.admin-glass-card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 3.5rem;
+    position: relative;
+    border-radius: 0;
+}
+
+.admin-glass-card::before {
+    content: '[ SECURE_MANAGER_PORTAL_v1.0 ]';
+    position: absolute;
+    top: -1.5rem;
+    left: 0;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--orange-primary);
+    letter-spacing: 2px;
+}
+
+.title-group {
+    margin-bottom: 3.5rem;
+    text-align: center;
+}
+
+.admin-title {
+    font-size: 1.8rem;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    letter-spacing: 8px;
+    line-height: 1.2;
+}
+
+.admin-subtitle {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.6rem;
+    color: #ff4444;
+    letter-spacing: 3px;
+    opacity: 0.8;
+}
+
+.admin-err-msg {
+    background: rgba(255, 68, 68, 0.05);
+    border-left: 2px solid #ff4444;
+    padding: 1.2rem;
+    margin-bottom: 2.5rem;
+    color: #ff4444;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+}
+
+.admin-form-group {
+    margin-bottom: 2rem;
+}
+
+.admin-form-group label {
+    display: block;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-bottom: 0.8rem;
+    letter-spacing: 1.5px;
+}
+
+.admin-input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--border-dim);
+    color: var(--text-main);
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: 0.3s;
+    letter-spacing: 2px;
+}
+
+.admin-input:focus {
+    border-color: var(--orange-primary);
+    box-shadow: 0 0 25px rgba(255, 77, 0, 0.2);
+    background: rgba(0, 0, 0, 1);
+}
+
+.admin-submit-btn {
+    width: 100%;
+    padding: 1.2rem;
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+    border-color: var(--orange-primary);
+    color: var(--orange-primary);
+    background: rgba(255, 77, 0, 0.05);
+}
+
+</style>
+
+<div class="admin-login-wrapper">
+    <div class="admin-glass-card">
+        <div class="title-group">
+            <h1 class="admin-title">MANAGER_ACCESS</h1>
+            <p class="admin-subtitle michroma">RESTRICTED_PROTOCOL_ACTIVE_</p>
+        </div>
+
+        {% if error %}
+        <div class="admin-err-msg">
+            SYSTEM_EVENT: {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" id="admin_form" class="cyber-form">
+            {% csrf_token %}
+            
+            <div class="admin-form-group">
+                <label>OPERATOR_IDENTIFIER_ (PHONE)</label>
+                <input type="text" name="phone_number" required class="admin-input" placeholder="XXXX-XXXXXX">
+            </div>
+
+            <div class="admin-form-group">
+                <label>MASTER_CRYPT_KEY_</label>
+                <input type="password" name="password" required class="admin-input" placeholder="********">
+            </div>
+            
+            <button type="submit" class="btn-industrial admin-submit-btn michroma" id="auth_btn">
+                AUTHENTICATE_EXECUTION_âž”
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+

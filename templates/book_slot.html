@@ -1,0 +1,49 @@
+﻿{% extends 'base.html' %}
+{% block title %}SG_STUDIO | Book{% endblock %}
+{% block content %}
+<div class="glass-panel form-panel">
+    <h2>RESERVE_SCREEN</h2>
+    <form method="post" class="cyber-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if form.non_field_errors %}
+            <div class="error-neon">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <button type="submit" class="btn-neon submit-btn">CONFIRM_</button>
+    </form>
+
+    {% if active_bookings %}
+    <div style="margin-top: 2rem;">
+        <h3>CURRENTLY OCCUPIED SLOTS</h3>
+        <table class="cyber-table" style="font-size: 0.85rem;">
+            <thead>
+                <tr>
+                    <th>DATE</th>
+                    <th>TIME</th>
+                    <th>SCREEN</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in active_bookings %}
+                <tr>
+                    <td>{{ b.date }}</td>
+                    <td>{{ b.time_slot }}</td>
+                    <td class="status-{{ b.screen.name|lower }}">{{ b.screen.name }}</td>
+                    <td>{{ b.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+
+
+
+
+
+

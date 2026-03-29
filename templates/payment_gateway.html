@@ -1,0 +1,155 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-profile{% endblock %}
+{% block content %}
+
+<style>
+.payment-wrapper {
+    display: flex;
+    min-height: 80vh;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: industrialFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.payment-card {
+    width: 100%;
+    max-width: 550px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 3.5rem;
+    position: relative;
+    text-align: center;
+}
+
+.payment-card::before {
+    content: '[ SECURE_TRANSACTION_v1.0 ]';
+    position: absolute;
+    top: -1.5rem;
+    left: 0;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.6rem;
+    color: var(--orange-primary);
+    opacity: 0.5;
+}
+
+.payment-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 3rem;
+    letter-spacing: 8px;
+    color: var(--text-main);
+}
+
+.amount-box {
+    background: rgba(255, 77, 0, 0.05);
+    border: 1px solid var(--border-orange);
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.amount-label {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-bottom: 0.8rem;
+    letter-spacing: 2px;
+}
+
+.amount-value {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 2.5rem;
+    color: var(--orange-primary);
+    text-shadow: 0 0 20px var(--orange-glow);
+}
+
+.order-info {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    opacity: 0.6;
+    margin-bottom: 3rem;
+}
+
+.razorpay-payment-button {
+    background: rgba(255, 77, 0, 0.1) !important;
+    border: 1px solid var(--orange-primary) !important;
+    color: var(--orange-primary) !important;
+    font-family: 'Syncopate', sans-serif !important;
+    font-size: 0.9rem !important;
+    padding: 1.2rem !important;
+    width: 100% !important;
+    letter-spacing: 3px !important;
+    cursor: pointer !important;
+    transition: 0.4s !important;
+    text-transform: uppercase !important;
+}
+
+.razorpay-payment-button:hover {
+    background: var(--orange-primary) !important;
+    color: #000 !important;
+    box-shadow: 0 0 30px var(--orange-glow) !important;
+}
+
+.dev-bypass-btn {
+    width: 100%;
+    padding: 1.2rem;
+    border-color: var(--orange-primary);
+    color: var(--orange-primary);
+    background: rgba(255, 77, 0, 0.1);
+    font-size: 0.9rem;
+}
+
+</style>
+
+<div class="payment-wrapper">
+    <div class="payment-card glass-panel">
+        <h2>PAYMENT_PORTAL</h2>
+        
+        <div class="amount-box">
+            <div class="amount-label">TOTAL_TRANSACTION_VALUATION:</div>
+            <div class="amount-value">â‚¹{{ total }}</div>
+        </div>
+        
+        <div class="order-info">
+            [ ORDER_REF: {{ razorpay_order_id|truncatechars:18 }} ]
+        </div>
+
+        {% if razorpay_key_id == 'rzp_test_YourTestKeyHere123' %}
+        <div style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-dim); padding: 1.2rem; margin-bottom: 2.5rem; font-family: 'Inter', sans-serif; font-size: 0.75rem; color: var(--text-dim);">
+            SYSTEM_MESSAGE: Sandbox Keys Detected. Razorpay frontend is disabled to prevent API crash. Click bypass to simulate callback.
+        </div>
+        <form action="{% url 'checkout' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="razorpay_payment_id" value="MOCK_PAY_123">
+            <input type="hidden" name="razorpay_order_id" value="{{ razorpay_order_id }}">
+            <input type="hidden" name="razorpay_signature" value="MOCK_SIGNATURE">
+            <button type="submit" class="btn-industrial dev-bypass-btn michroma">SIMULATE_TRANSACTION_âž”</button>
+        </form>
+        {% else %}
+        <form action="{% url 'checkout' %}" method="POST">
+            {% csrf_token %}
+            <script
+                src="https://checkout.razorpay.com/v1/checkout.js"
+                data-key="{{ razorpay_key_id }}"
+                data-amount="{{ amount_paise }}"
+                data-currency="INR"
+                data-order_id="{{ razorpay_order_id }}"
+                data-buttontext="EXECUTE_SECURE_PAYMENT_âž”"
+                data-name="ACE STUDIOS_ARENA"
+                data-description="INDUSTRIAL_GAMING_RESERVATION"
+                data-image=""
+                data-prefill.contact="{{ user_phone }}"
+                data-theme.color="#FF4D00">
+            </script>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+

@@ -1,0 +1,251 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-profile{% endblock %}
+{% block content %}
+
+<style>
+.cart-wrapper {
+    max-width: 1100px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    animation: industrialFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.cart-header {
+    border-bottom: 2px solid var(--orange-primary);
+    padding-bottom: 1.5rem;
+    margin-bottom: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.cart-header h2 {
+    font-size: 2.5rem;
+    color: var(--text-main);
+    letter-spacing: 10px;
+}
+
+.cart-section {
+    margin-bottom: 5rem;
+}
+
+.section-head {
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--orange-primary);
+    padding-left: 1rem;
+}
+
+.section-head h3 {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.count-tag {
+    font-size: 0.6rem;
+    background: rgba(255, 77, 0, 0.1);
+    color: var(--orange-primary);
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--border-orange);
+}
+
+.industrial-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+}
+
+.industrial-table th {
+    text-align: left;
+    padding: 1.2rem;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border-dim);
+}
+
+.industrial-table td {
+    padding: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.status-label {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+}
+
+.status-pending { color: #ffcc00; }
+.status-approved { color: #00ff88; }
+
+.remove-link {
+    color: #ff4444;
+    text-decoration: none;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+.remove-link:hover { opacity: 1; text-shadow: 0 0 10px rgba(255,68,68,0.3); }
+
+.checkout-summary {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: rgba(255, 77, 0, 0.05);
+    border: 1px solid var(--border-orange);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-amount {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 1.5rem;
+    color: var(--text-main);
+}
+
+.total-amount span {
+    color: var(--orange-primary);
+    margin-left: 1rem;
+}
+
+.btn-checkout {
+    padding: 1rem 3rem;
+    font-size: 1rem;
+    border-color: var(--orange-primary);
+    color: var(--orange-primary);
+    background: rgba(255, 77, 0, 0.1);
+}
+
+.cart-controls {
+    margin-top: 3rem;
+    display: flex;
+    gap: 2rem;
+}
+
+.empty-msg {
+    padding: 3rem;
+    text-align: center;
+    border: 1px dashed var(--border-dim);
+    color: var(--text-dim);
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+</style>
+
+<div class="cart-wrapper">
+    <div class="cart-header">
+        <h2>CART_HUB</h2>
+        <div class="tech-label">[ USER_SESSION_ACTIVE ]</div>
+    </div>
+
+    {% if error %}
+    <div class="error-list" style="margin-bottom: 3rem;">
+        <strong>SYSTEM_ALERT:</strong> {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- PENDING ITEMS -->
+    <div class="cart-section">
+        <div class="section-head">
+            <h3>MODERATOR_REVIEW_REQUIRED <span class="count-tag">{{ pending_items|length }}</span></h3>
+        </div>
+        
+        {% if pending_items %}
+            <table class="industrial-table">
+                <thead>
+                    <tr>
+                        <th>ARENA_SCREEN</th>
+                        <th>DATE</th>
+                        <th>TIME_SLOT</th>
+                        <th>STATUS_CODE</th>
+                        <th>OPERATIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in pending_items %}
+                    <tr>
+                        <td class="michroma">{{ item.screen.name }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.time_slot }}</td>
+                        <td><span class="status-label status-pending">[ PENDING_APPROVAL ]</span></td>
+                        <td><a href="{% url 'remove_from_cart' item.id %}" class="remove-link">CANCEL_REQUEST_</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-msg">NO_PENDING_REQUESTS_LOGGED</div>
+        {% endif %}
+    </div>
+
+    <!-- APPROVED ITEMS -->
+    <div class="cart-section">
+        <div class="section-head">
+            <h3>READY_FOR_COMMERCIAL_TRANSACTION <span class="count-tag">{{ approved_items|length }}</span></h3>
+        </div>
+        
+        {% if approved_items %}
+            <table class="industrial-table">
+                <thead>
+                    <tr>
+                        <th>ARENA_SCREEN</th>
+                        <th>DATE</th>
+                        <th>TIME_SLOT</th>
+                        <th>VALUATION</th>
+                        <th>OPERATIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in approved_items %}
+                    <tr>
+                        <td class="michroma">{{ item.screen.name }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.time_slot }}</td>
+                        <td class="michroma" style="color: var(--orange-primary);">{{ item.amount }}</td>
+                        <td><a href="{% url 'remove_from_cart' item.id %}" class="remove-link">REMOVE_ITEM_</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="checkout-summary">
+                <div class="total-amount">TOTAL_VALUATION: <span>{{ total }}</span></div>
+                <a href="{% url 'checkout' %}" class="btn-industrial btn-checkout">
+                    EXECUTE_PAYMENT_
+                </a>
+            </div>
+        {% else %}
+            <div class="empty-msg">NO_AUTHORIZED_ITEMS_FOR_CHECKOUT</div>
+        {% endif %}
+    </div>
+
+    <div class="cart-controls">
+        <a href="{% url 'book_search' %}" class="btn-industrial">
+            + ADD_MORE_RESERVATIONS
+        </a>
+        <a href="{% url 'dashboard' %}" class="btn-industrial" style="border-color: transparent; opacity: 0.6;">
+            BACK_TO_SYSTEM_DASHBOARD
+        </a>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+

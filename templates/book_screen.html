@@ -1,0 +1,97 @@
+﻿{% extends "base.html" %}
+{% load static %}
+{% block bg_class %}bg-booking{% endblock %}
+{% block content %}
+<div style="max-width:680px;margin:2rem auto;position:relative;z-index:10;padding:0 1rem;">
+
+  <!-- Back + Title -->
+  <div style="margin-bottom:1.5rem;">
+    <a href="{% url 'book_search' %}" style="color:var(--magenta);font-family:'Bangers';font-size:1.2rem;text-decoration:none;font-size:0.85rem;letter-spacing:2px;">&#8592; BACK</a>
+    <h1 style="font-family:'Bangers',cursive;font-size:2.5rem;color:var(--magenta);-webkit-text-stroke:1px var(--comic-black);margin:0.8rem 0 0.3rem;letter-spacing:4px;">SCHEDULE YOUR BOOKING</h1>
+    <p style="color:var(--magenta);letter-spacing:2px;font-size:0.8rem;">SCREEN {{ screen.id }} &mdash; {{ screen.color|upper }} STATION</p>
+    <div style="height:1px;background:rgba(255,255,255,0.1);margin-top:1rem;"></div>
+  </div>
+
+  <!-- Calendar section -->
+  <div class="glass-panel" style="padding:1.5rem;border-radius:16px;margin-bottom:1.5rem;">
+    <p style="color:var(--comic-black);letter-spacing:2px;font-size:0.75rem;margin-bottom:1rem;">SELECT A DATE AND TIME</p>
+    <div style="height:1px;background:rgba(255,255,255,0.1);margin-bottom:1.2rem;"></div>
+
+    <!-- Week navigation -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:2rem;margin-bottom:1.2rem;">
+      <a href="?date={{ prev_week }}" style="color:var(--magenta);font-family:'Bangers';font-size:1.2rem;text-decoration:none;font-size:1.2rem;padding:0.3rem 0.8rem;border:1px solid rgba(0,255,255,0.2);border-radius:8px;">&lt;</a>
+      <span style="font-family:'Orbitron',sans-serif;letter-spacing:4px;color:var(--comic-black);font-size:0.85rem;">{{ month_name|upper }}</span>
+      <a href="?date={{ next_week }}" style="color:var(--magenta);font-family:'Bangers';font-size:1.2rem;text-decoration:none;font-size:1.2rem;padding:0.3rem 0.8rem;border:1px solid rgba(0,255,255,0.2);border-radius:8px;">&gt;</a>
+    </div>
+
+    <!-- Day headers -->
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:0.8rem;">
+      {% for d in week_days %}
+      <div style="color:var(--comic-black);font-size:0.65rem;letter-spacing:2px;">{{ d|date:"D"|slice:":3"|upper }}</div>
+      {% endfor %}
+    </div>
+
+    <!-- Day numbers -->
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;">
+      {% for d in week_days %}
+      {% if d == selected_date %}
+      <a href="?date={{ d|date:'Y-m-d' }}" style="text-decoration:none;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--magenta);color:white;border:2px solid var(--comic-black);font-weight:bold;display:flex;align-items:center;justify-content:center;margin:auto;font-size:0.9rem;">{{ d.day }}</div>
+      </a>
+      {% elif d < today %}
+      <div style="width:36px;height:36px;border-radius:50%;color:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin:auto;font-size:0.9rem;">{{ d.day }}</div>
+      {% else %}
+      <a href="?date={{ d|date:'Y-m-d' }}" style="text-decoration:none;">
+        <div style="width:36px;height:36px;border-radius:50%;color:var(--comic-black);display:flex;align-items:center;justify-content:center;margin:auto;font-size:0.9rem;transition:all 0.2s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='transparent'">{{ d.day }}</div>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Availability section -->
+  <div class="glass-panel" style="padding:1.5rem;border-radius:16px;">
+    <p style="color:var(--comic-black);letter-spacing:2px;font-size:0.75rem;margin-bottom:1rem;">
+      AVAILABILITY FOR {{ selected_date|date:"l, d F"|upper }}
+    </p>
+    <div style="height:1px;background:rgba(255,255,255,0.1);margin-bottom:1.2rem;"></div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;">
+      {% for slot in slots %}
+      {% if slot.booked or slot.is_past %}
+        <div style="
+          padding:0.8rem;text-align:center;border-radius:30px;
+          background:rgba(255,255,255,0.06);
+          color:rgba(255,255,255,0.25);
+          font-size:0.85rem;letter-spacing:1px;
+          cursor:not-allowed;border:1px solid rgba(255,255,255,0.08);
+        ">{{ slot.label }}{% if slot.booked %} —{% endif %}</div>
+      {% else %}
+        <a href="{% url 'book_confirm' screen.id selected_date|date:'Y-m-d' slot.value %}" style="text-decoration:none;">
+          <div style="
+            padding:0.8rem;text-align:center;border-radius:30px;
+            background:linear-gradient(135deg,#6c3ddb,#4e2faa);
+            color:var(--comic-black);font-size:0.85rem;letter-spacing:1px;
+            cursor:pointer;border:1px solid rgba(108,61,219,0.6);
+            transition:all 0.2s;font-weight:600;
+          " onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 0 15px rgba(108,61,219,0.6)';"
+             onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none';">{{ slot.label }}</div>
+        </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div style="margin-top:1.5rem;display:flex;gap:1.5rem;font-size:0.75rem;color:var(--comic-black);">
+      <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#6c3ddb,#4e2faa);vertical-align:middle;margin-right:4px;"></span>Available</span>
+      <span><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.1);vertical-align:middle;margin-right:4px;"></span>Unavailable</span>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,216 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-profile{% endblock %}
+{% block content %}
+
+<style>
+.profile-wrapper {
+    max-width: 1100px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    animation: industrialFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.profile-header {
+    border-bottom: 1px solid var(--border-orange);
+    padding-bottom: 1.5rem;
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.profile-header h2 {
+    font-size: 2.5rem;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--orange-primary);
+}
+
+.stat-label {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-family: 'Syncopate', sans-serif;
+    color: var(--text-main);
+}
+
+.industrial-table-wrapper {
+    margin-bottom: 5rem;
+}
+
+.table-title {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: var(--orange-primary);
+}
+
+.industrial-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+}
+
+.industrial-table th {
+    text-align: left;
+    padding: 1.2rem;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border-dim);
+    text-transform: uppercase;
+}
+
+.industrial-table td {
+    padding: 1.2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-main);
+}
+
+.status-badge {
+    padding: 0.3rem 0.8rem;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.6rem;
+    border-radius: 2px;
+}
+
+.status-approved { background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3); }
+.status-pending { background: rgba(255, 255, 0, 0.1); color: #ffff00; border: 1px solid rgba(255, 255, 0, 0.3); }
+.status-declined { background: rgba(255, 0, 0, 0.1); color: #ff4444; border: 1px solid rgba(255, 0, 0, 0.3); }
+
+.empty-state {
+    padding: 4rem;
+    text-align: center;
+    border: 1px dashed var(--border-dim);
+    color: var(--text-dim);
+    font-family: 'Michroma', sans-serif;
+}
+
+</style>
+
+<div class="profile-wrapper">
+    <div class="profile-header">
+        <h2>USER_PROFILE</h2>
+        <div class="tech-label">[ ID: {{ user.id }} ]</div>
+    </div>
+
+    <div class="profile-stats">
+        <div class="stat-card">
+            <div class="stat-label">REGISTRY_IDENTIFIER</div>
+            <div class="stat-value">{{ user.phone_number }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">ACCOUNT_STATUS</div>
+            <div class="stat-value michroma" style="font-size: 1.5rem; color: #00ff88;">ACTIVE_VERIFIED</div>
+        </div>
+    </div>
+
+    <div class="industrial-table-wrapper">
+        <h3 class="table-title">ACTIVE_RESERVATIONS_</h3>
+        {% if bookings %}
+            <table class="industrial-table">
+                <thead>
+                    <tr>
+                        <th>ARENA_SCREEN</th>
+                        <th>DATE</th>
+                        <th>TIME_SLOT</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in bookings %}
+                    <tr>
+                        <td class="michroma">{{ b.screen.name }}</td>
+                        <td>{{ b.date }}</td>
+                        <td>{{ b.time_slot }}</td>
+                        <td><span class="status-badge status-{{ b.status|lower }}">{{ b.status }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">NO_ACTIVE_RESERVATIONS_DETECTED</div>
+        {% endif %}
+    </div>
+
+    <div class="industrial-table-wrapper">
+        <h3 class="table-title">FINANCIAL_HISTORY_</h3>
+        {% if transactions %}
+            <table class="industrial-table">
+                <thead>
+                    <tr>
+                        <th>RECEIPT_ID</th>
+                        <th>TIMESTAMP</th>
+                        <th>ITEMS</th>
+                        <th>TOTAL</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% regroup transactions by transaction_id as grouped_txns %}
+                    {% for group in grouped_txns %}
+                    <tr>
+                        <td style="font-family: monospace; opacity: 0.6;">{{ group.grouper|truncatechars:12 }}</td>
+                        <td>{{ group.list.0.payment_date|date:"M d, H:i" }}</td>
+                        <td>
+                            <div style="font-size: 0.8rem; opacity: 0.8;">
+                            {% for b in group.list %}
+                                {{ b.screen.name }} ({{ b.date|date:"M d" }}){% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            </div>
+                        </td>
+                        <td class="michroma" style="color: var(--orange-primary);">
+                            â‚¹{% widthratio group.list|length 1 group.list.0.amount %}
+                        </td>
+                        <td>
+                            {% if group.list.0.status == 'Declined' %}
+                            <span class="status-badge status-declined">REFUNDED</span>
+                            {% else %}
+                            <span class="status-badge status-approved">PAID</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">NO_FINANCIAL_HISTORY_LOGGED</div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+

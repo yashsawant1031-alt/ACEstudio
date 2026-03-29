@@ -1,0 +1,30 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}SG_STUDIO | Home{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1 class="glitch" data-text="ELITE GAMING AWAITS">ELITE GAMING AWAITS</h1>
+    <p>5 DEDICATED SCREENS. PREMIUM VIP EXPERIENCE.</p>
+    {% if not user.is_authenticated %}
+        <a href="{% url 'register' %}" class="btn-neon large">INITIALIZE PROFILE</a>
+    {% else %}
+        <a href="{% url 'book_slot' %}" class="btn-neon large">BOOK NOW</a>
+    {% endif %}
+</div>
+
+<div class="screens-grid">
+    <div class="screen-card red">RED_COMMAND</div>
+    <div class="screen-card yellow">YELLOW_FORGE</div>
+    <div class="screen-card blue">BLUE_NEXUS</div>
+    <div class="screen-card green">GREEN_OASIS</div>
+    <div class="screen-card white">WHITE_PINNACLE</div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+

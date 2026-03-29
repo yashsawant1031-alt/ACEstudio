@@ -1,0 +1,47 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-admin-portal{% endblock %}
+{% block content %}
+<div style="display: flex; min-height: 80vh; align-items: center; justify-content: center; padding: 2rem;">
+    <div class="glass-panel" style="width: 100%; max-width: 450px; text-align: center; background: rgba(0,0,0,0.8); border: 2px solid var(--vibrant-cyan); box-shadow: 0 0 20px var(--vibrant-cyan);">
+        <h2 style="font-family: 'Bangers'; color: #fff; font-size: 2.5rem; margin-bottom: 0.5rem;">SECURE_VERIFICATION</h2>
+        <p style="font-family: 'Outfit'; color: #00BCD4; font-weight: bold; margin-bottom: 2rem;">OTP_SENT_TO: {{ phone }}</p>
+        
+        {% if error %}
+        <div style="background: rgba(255,0,0,0.2); border: 1px solid var(--magenta); color: #ff99aa; padding: 0.8rem; margin-bottom: 2.5rem; font-family: 'Bangers'; font-size: 0.9rem;">
+            ERR: {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 1.5rem; text-align: left;">
+                <label style="color: #fff; font-family: 'Bangers'; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">INPUT_6_DIGIT_OTP</label>
+                <input type="text" name="otp" required maxlength="6" style="width: 100%; padding: 1rem; background: rgba(0,0,0,0.5); border: 2px solid var(--vibrant-cyan); color: #fff; font-size: 1.5rem; letter-spacing: 5px; text-align: center; outline: none;">
+            </div>
+            
+            <div style="margin-bottom: 1.5rem; text-align: left;">
+                <label style="color: #fff; font-family: 'Bangers'; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">NEW_ACCESS_KEY</label>
+                <input type="password" name="new_password" required style="width: 100%; padding: 1rem; background: rgba(0,0,0,0.5); border: 2px solid var(--vibrant-cyan); color: #fff; font-size: 1.2rem; outline: none;">
+            </div>
+            
+            <div style="margin-bottom: 2rem; text-align: left;">
+                <label style="color: #fff; font-family: 'Bangers'; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">CONFIRM_KEY</label>
+                <input type="password" name="confirm_password" required style="width: 100%; padding: 1rem; background: rgba(0,0,0,0.5); border: 2px solid var(--vibrant-cyan); color: #fff; font-size: 1.2rem; outline: none;">
+            </div>
+            
+            <button type="submit" class="btn-neon" style="width: 100%; font-size: 1.5rem; padding: 1.2rem;">REAUTHORIZE_ACCOUNT âž”</button>
+        </form>
+        
+        <div style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+            <p style="font-family: 'Outfit'; color: rgba(255,255,255,0.4); font-size: 0.8rem;">OTP EXPIRES IN 10 MINUTES.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+

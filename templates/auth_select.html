@@ -1,0 +1,129 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-auth{% endblock %}
+{% block content %}
+
+<style>
+.selector-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+    animation: industrialFade 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    position: relative;
+}
+
+.selector-grid {
+    display: flex;
+    gap: 4rem;
+    max-width: 1000px;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.selector-card {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 4rem;
+    text-align: center;
+    text-decoration: none;
+    transition: 0.5s;
+    position: relative;
+    overflow: hidden;
+}
+
+.selector-card:hover {
+    border-color: var(--orange-primary);
+    background: rgba(255, 77, 0, 0.03);
+    transform: translateY(-10px);
+    box-shadow: 0 10px 40px rgba(255, 77, 0, 0.1);
+}
+
+.selector-card h2 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 1.5rem;
+    color: var(--text-main);
+    letter-spacing: 6px;
+    margin-bottom: 2rem;
+}
+
+.selector-card .desc {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    line-height: 2;
+    letter-spacing: 2px;
+}
+
+.selector-card .icon-label {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 0.6rem;
+    color: var(--orange-primary);
+    opacity: 0.5;
+}
+
+/* Restricted System Access Portal Link (Stage 2 ONLY) */
+.auth-footer {
+    position: absolute;
+    bottom: -6rem;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.portal-link {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 4px;
+    opacity: 0.3;
+    transition: 0.5s;
+}
+
+.portal-link:hover {
+    color: var(--orange-primary);
+    opacity: 1;
+    text-shadow: 0 0 10px var(--orange-glow);
+}
+
+@media (max-width: 768px) {
+    .selector-grid { flex-direction: column; padding: 0 2rem; }
+}
+
+</style>
+
+<div class="selector-wrapper">
+    <div class="tech-label" style="margin-bottom: 3rem; letter-spacing: 15px;">[ AUTH_GATEWAY_v1.0 ]</div>
+    
+    <div class="selector-grid">
+        <a href="{% url 'login_view' %}" class="selector-card glass-panel">
+            <span class="icon-label michroma">01_IDENT</span>
+            <h2>SIGN_IN_</h2>
+           
+        </a>
+
+        <a href="{% url 'register_view' %}" class="selector-card glass-panel">
+            <span class="icon-label michroma">02_NEW_ID</span>
+            <h2>REGISTER_</h2>
+           
+        </a>
+    </div>
+
+    <!-- Restricted System Access Portal Link (Isolated to Stage 2) -->
+    <div class="auth-footer">
+        <a href="{% url 'admin_login' %}" class="portal-link">SYSTEM_ACCESS_v1.0_PORTAL_</a>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+

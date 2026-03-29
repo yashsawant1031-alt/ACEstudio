@@ -1,0 +1,29 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-booking{% endblock %}
+{% block content %}
+<div style="text-align: center; margin-bottom: 3rem;">
+    <h1 class="quote-text" style="font-size: 2.5rem;">ARENA CAPACITY CHECK</h1>
+    <p style="color: var(--neon-cyan); letter-spacing: 2px;">{{ date }} || {{ time_slot }}</p>
+</div>
+
+<div class="screens-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+    {% for entry in screen_data %}
+        <div class="screen-card {{ entry.screen.color|lower }}" style="min-height: 250px; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+            <h3 style="font-size: 1.8rem; margin-bottom: 2rem; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5);">{{ entry.screen.name|upper }}</h3>
+            
+            {% if entry.is_booked %}
+                <div style="color: var(--neon-pink); font-weight: bold; border: 2px solid var(--neon-pink); padding: 0.8rem 2rem; text-shadow: 0 0 10px var(--neon-pink);">UNAVAILABLE</div>
+            {% else %}
+                <a href="{% url 'book_confirm' entry.screen.id date time_slot %}" class="btn-neon glossy-animation" style="padding: 0.8rem 2.5rem; text-decoration: none;">BOOK NOW</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+
+
+
+
+

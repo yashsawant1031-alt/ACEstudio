@@ -1,0 +1,293 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-booking{% endblock %}
+{% block content %}
+
+<style>
+.booking-premium-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    animation: industrialFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+}
+
+.hub-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    padding: 0.8rem 1.5rem;
+    border: 1px solid var(--border-dim);
+    transition: 0.4s;
+}
+
+.hub-link:hover {
+    color: var(--orange-primary);
+    border-color: var(--orange-primary);
+    background: rgba(255, 77, 0, 0.05);
+}
+
+.section-title {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 2.2rem;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    letter-spacing: 5px;
+}
+
+.section-desc {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    line-height: 2;
+    margin-bottom: 4rem;
+    letter-spacing: 1px;
+}
+
+/* HORIZONTAL CALENDAR SCROLLER */
+.month-label {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.8rem;
+    color: var(--orange-primary);
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: 4px;
+}
+
+.date-scroller {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.2rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 4rem;
+    scrollbar-width: none;
+}
+.date-scroller::-webkit-scrollbar { display: none; }
+
+.date-item {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.day-name {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+}
+
+.day-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid var(--border-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-main);
+}
+
+.date-item.active .day-circle {
+    background: var(--text-main);
+    color: #000;
+}
+
+/* SLOT GRID */
+.slot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.slot-btn {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-dim);
+    border-radius: 10px;
+    color: var(--text-main);
+    position: relative;
+    cursor: pointer;
+    transition: 0.4s;
+    overflow: hidden;
+}
+
+.slot-btn .slot-time {
+    display: block;
+    font-family: 'Syncopate', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.slot-btn .availability-status {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+}
+
+.status-available { color: #00ff88; }
+.status-booked { color: #ff4444; }
+
+.slot-btn:hover:not(.disabled) {
+    border-color: var(--orange-primary);
+    background: rgba(255, 77, 0, 0.05);
+}
+
+.slot-btn.active {
+    background: var(--orange-primary);
+    border-color: var(--orange-primary);
+    color: #000;
+}
+.slot-btn.active .status-available { color: #000; opacity: 0.6; }
+
+.slot-btn.disabled {
+    opacity: 0.15;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+.booking-action-btn {
+    width: 100%;
+    padding: 1.5rem;
+    font-size: 1.1rem;
+}
+
+</style>
+
+<div class="booking-premium-container">
+    <div class="top-nav">
+        <div class="tech-label" style="opacity: 0.5;">[ ARENA_RESERVATION_v1.0 ]</div>
+        <a href="{% url 'dashboard' %}" class="hub-link">[ BACK_TO_HUB_ ]</a>
+    </div>
+
+    <h1 class="section-title">SCHEDULE_BOOKING</h1>
+    <p class="section-desc">SELECT AN OPERATIONAL CYCLE. SLOTS MARKED AS [BOOKED] ARE CURRENTLY LOCKED BY MASTER OPS.</p>
+
+    <div class="month-label">{{ current_month }}</div>
+
+    <div class="date-scroller" id="date_scroller">
+        {% for d in display_dates %}
+        <div class="date-item {% if d.full_iso == today_iso %}active{% endif %}" 
+             data-iso="{{ d.full_iso }}" 
+             onclick="selectDate(this)">
+            <span class="day-name">{{ d.day_name }}</span>
+            <div class="day-circle">{{ d.day_num }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="slot-grid" id="slot_grid">
+        {% for slot in all_slots %}
+        <div class="slot-btn" 
+             data-val="{{ slot.val }}" 
+             onclick="selectSlot(this)">
+            <span class="slot-time">{{ slot.label }}</span>
+            <span class="availability-status" id="status_{{ slot.val|slugify }}"></span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <form method="post" action="{% url 'book_results' screen.id %}" id="booking_form">
+        {% csrf_token %}
+        <input type="hidden" name="date" id="selected_date" value="{{ today_iso }}">
+        <input type="hidden" name="time_slot" id="selected_slot" value="">
+        
+        <button type="submit" class="btn-industrial booking-action-btn" id="submit_btn" disabled>
+            EXECUTE_RESERVATION
+        </button>
+    </form>
+</div>
+
+<script>
+// Backend-provided map of Approved (Locked) bookings
+const bookedMap = {{ booked_map_json|safe }};
+
+function updateAvailability(selectedDate) {
+    const bookedSlotsForDate = bookedMap[selectedDate] || [];
+    
+    document.querySelectorAll('.slot-btn').forEach(btn => {
+        const slotVal = btn.getAttribute('data-val');
+        const statusEl = btn.querySelector('.availability-status');
+        
+        btn.classList.remove('disabled', 'active');
+        
+        const slotHour = parseInt(slotVal.split(':')[0]);
+        const isToday = (selectedDate === "{{ today_iso }}");
+        const currentHour = new Date().getHours();
+
+        if (bookedSlotsForDate.includes(slotVal)) {
+            btn.classList.add('disabled');
+            statusEl.innerText = '[ BOOKED ]';
+            statusEl.className = 'availability-status status-booked';
+        } else if (isToday && slotHour <= currentHour) {
+            btn.classList.add('disabled');
+            statusEl.innerText = '[ PAST_TIME ]';
+            statusEl.className = 'availability-status status-booked';
+        } else {
+            statusEl.innerText = '[ AVAILABLE ]';
+            statusEl.className = 'availability-status status-available';
+        }
+    });
+
+    // Reset Submit Button
+    document.getElementById('selected_slot').value = "";
+    document.getElementById('submit_btn').disabled = true;
+    document.getElementById('submit_btn').innerText = "EXECUTE_RESERVATION_";
+}
+
+function selectDate(element) {
+    document.querySelectorAll('.date-item').forEach(i => i.classList.remove('active'));
+    element.classList.add('active');
+    
+    const date = element.getAttribute('data-iso');
+    document.getElementById('selected_date').value = date;
+    
+    updateAvailability(date);
+}
+
+function selectSlot(element) {
+    if (element.classList.contains('disabled')) return;
+    
+    document.querySelectorAll('.slot-btn').forEach(i => i.classList.remove('active'));
+    element.classList.add('active');
+    
+    const slot = element.getAttribute('data-val');
+    document.getElementById('selected_slot').value = slot;
+    
+    document.getElementById('submit_btn').disabled = false;
+    document.getElementById('submit_btn').innerText = `BOOK_SESSION_FOR_${slot}_`;
+}
+
+// Initial Availability Load
+window.onload = () => {
+    updateAvailability("{{ today_iso }}");
+};
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

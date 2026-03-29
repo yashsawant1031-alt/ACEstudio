@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}SG_STUDIO | Register{% endblock %}
+{% block content %}
+<div class="glass-panel form-panel auth-panel">
+    <h2>NEW_ENTITY_REGISTRATION_</h2>
+    <form method="post" class="cyber-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-neon submit-btn">CREATE PROFILE</button>
+    </form>
+    <p>Existing Entity? <a href="{% url 'login' %}">AUTHENTICATE</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,226 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-admin-portal{% endblock %}
+{% block content %}
+
+<style>
+.admin-dash-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 4rem;
+    animation: industrialFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.admin-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+    border-bottom: 1px solid var(--border-dim);
+    padding-bottom: 2rem;
+}
+
+.admin-nav {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.admin-nav-item {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 2px;
+    padding: 0.8rem 1.5rem;
+    border: 1px solid transparent;
+    transition: 0.4s;
+}
+
+.admin-nav-item:hover {
+    color: var(--orange-primary);
+}
+
+.exit-btn {
+    border: 1px solid var(--border-dim);
+    opacity: 0.6;
+}
+
+.exit-btn:hover {
+    border-color: #ff4444;
+    color: #ff4444;
+    opacity: 1;
+    background: rgba(255, 68, 68, 0.05);
+}
+
+.admin-header h2 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 3rem;
+    color: var(--text-main);
+    letter-spacing: 12px;
+    margin-bottom: 1rem;
+}
+
+.admin-section {
+    margin-bottom: 6rem;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    border-left: 5px solid var(--orange-primary);
+    padding-left: 1.5rem;
+}
+
+.section-head h3 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 4px;
+    color: var(--text-main);
+}
+
+.count-badge {
+    background: var(--orange-primary);
+    color: #000;
+    padding: 0.2rem 1rem;
+    font-family: 'Michroma', sans-serif;
+    font-weight: 900;
+    font-size: 0.8rem;
+    border-radius: 20px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-card);
+}
+
+.admin-table th {
+    text-align: left;
+    padding: 1.5rem;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border-dim);
+    text-transform: uppercase;
+}
+
+.admin-table td {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: var(--text-main);
+}
+
+.btn-approve { border-color: #00ff88; color: #00ff88; }
+.btn-decline { border-color: #ff4444; color: #ff4444; }
+
+.system-msg {
+    background: rgba(255, 77, 0, 0.05);
+    border: 1px dashed var(--orange-primary);
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.8rem;
+    color: var(--orange-primary);
+    letter-spacing: 2px;
+}
+</style>
+
+<div class="admin-dash-wrapper">
+    <div class="admin-top-bar">
+        <div class="tech-label" style="opacity: 0.5;">[ SECURE_PORTAL_v1.0 ]</div>
+        <div class="admin-nav">
+            <a href="{% url 'admin_profile' %}" class="admin-nav-item">[ MASTER_PROFILE ]</a>
+            <a href="{% url 'admin_logout' %}" class="admin-nav-item exit-btn">
+                [ EXIT_PORTAL_âž” ]
+            </a>
+        </div>
+    </div>
+
+    <div class="admin-header">
+        <h2>ADMIN_SYSTEM</h2>
+        <div class="tech-label" style="margin-top: 1rem;">[ LOGGED_IN_AS: MASTER_OPS ]</div>
+    </div>
+
+    {% if request.GET.msg %}
+    <div class="system-msg michroma">
+        SYSTEM_RESPONSE: >> {{ request.GET.msg }}
+    </div>
+    {% endif %}
+
+    <div class="admin-section">
+        <div class="section-head">
+            <h3>PENDING_APPROVALS_</h3>
+            <span class="count-badge michroma">{{ pending.count }}</span>
+        </div>
+        
+        {% if pending %}
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>USER_ID</th>
+                        <th>ARENA_SCREEN</th>
+                        <th>DATE / SLOT</th>
+                        <th>VALUATION</th>
+                        <th>OPERATIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in pending %}
+                    <tr>
+                        <td class="michroma" style="opacity: 0.8;">{{ b.user.phone_number }}</td>
+                        <td>{{ b.screen.name }}</td>
+                        <td>{{ b.date }} / {{ b.time_slot }}</td>
+                        <td style="color: var(--orange-primary); font-weight: bold;">â‚¹{{ b.amount }}</td>
+                        <td style="display: flex; gap: 1rem;">
+                            <a href="{% url 'manage_booking' b.id 'approve' %}" class="btn-industrial btn-approve">APPROVE_REQ</a>
+                            <a href="{% url 'manage_booking' b.id 'decline' %}" class="btn-industrial btn-decline">DECLINE</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state michroma" style="padding: 3rem; text-align: center; border: 1px dashed var(--border-dim); opacity: 0.3;">
+                SYSTEM_IDLE: NO_PENDING_REQUESTS
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="admin-section">
+        <div class="section-head">
+            <h3>SYSTEM_ARCHIVE_</h3>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>USER</th>
+                    <th>ARENA</th>
+                    <th>TIMESTAMP</th>
+                    <th>STATUS_CODE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in history %}
+                <tr>
+                    <td>{{ b.user.phone_number }}</td>
+                    <td>{{ b.screen.name }}</td>
+                    <td>{{ b.date }} @ {{ b.time_slot }}</td>
+                    <td><span class="status-badge" style="color: {% if b.status == 'Approved' %}#00ff88{% elif b.status == 'Declined' %}#ff4444{% else %}#ffcc00{% endif %};">[{{ b.status|upper }}]</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+

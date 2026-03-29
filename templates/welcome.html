@@ -1,0 +1,131 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-welcome{% endblock %}
+{% block back_btn %}{% endblock %}
+{% block content %}
+
+<style>
+@keyframes fadeZoom {
+    0% { opacity: 0; transform: scale(1.1); filter: blur(10px); }
+    100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@keyframes slideUp {
+    0% { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 85vh;
+    animation: fadeZoom 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-layout {
+    position: relative;
+    padding: 10rem 0;
+    text-align: center;
+}
+
+.big-801 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 15vw;
+    font-weight: 700;
+    line-height: .7;
+    margin-bottom: -4vw;
+    color: #ff4d00;
+    text-shadow: 0 0 50px rgba(255, 77, 0, 0.6), 0 0 100px rgba(255, 77, 0, 0.3);
+    opacity: 0.6;
+    user-select: none;
+    -webkit-text-stroke: 2px #ff4d00;
+}
+
+.studio-main-title {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 8vw;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: 0.5em;
+    margin-bottom: 5rem;
+    position: relative;
+    z-index: 5;
+    animation: slideUp 1s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.explore-container {
+    animation: slideUp 1s 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.btn-auth-select {
+    font-size: 1.4rem;
+    padding: 1.5rem 6rem;
+    border-color: var(--text-main);
+    color: var(--text-main);
+    min-width: 400px;
+    justify-content: center;
+    background: rgba(255, 77, 0, 0.02);
+}
+
+.side-decor {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 550px;
+    background: repeating-linear-gradient(
+        transparent, 
+        transparent 5px, 
+        var(--orange-primary) 5px, 
+        var(--orange-primary) 7px
+    );
+    opacity: 0.8;
+    box-shadow: 0 0 20px var(--orange-primary), 0 0 40px rgba(255, 77, 0, 0.2);
+    animation: wavePulse 2.5s infinite ease-in-out;
+    filter: drop-shadow(0 0 10px var(--orange-primary));
+}
+
+@keyframes wavePulse {
+    0%, 100% { height: 500px; opacity: 0.4; transform: translateY(-50%) scaleX(1); }
+    50% { height: 600px; opacity: 1; transform: translateY(-50%) scaleX(1.5); }
+}
+
+.decor-left { left: -12vw; }
+.decor-right { right: -12vw; }
+
+</style>
+
+<div class="welcome-page-container">
+    <div class="hero-layout">
+        <div class="side-decor decor-left"></div><div class="side-decor decor-left" style="left: -15vw; opacity: 0.2; width: 1px; animation-delay: 1.2s;"></div>
+        <div class="side-decor decor-right"></div><div class="side-decor decor-right" style="right: -15vw; opacity: 0.2; width: 1px; animation-delay: 1.2s;"></div>
+        
+        <div class="big-801">ACE</div>
+        <h1 class="studio-main-title">STUDIOS</h1>
+        
+        <div class="explore-container">
+            <a href="{% url 'auth_select' %}" class="btn-industrial btn-auth-select">
+                CONNECT TO STUDIO
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

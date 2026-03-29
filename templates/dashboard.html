@@ -1,0 +1,173 @@
+﻿{% extends 'base.html' %}
+{% block bg_class %}bg-dashboard{% endblock %}
+{% block content %}
+
+<style>
+.dashboard-app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+    animation: industrialFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8rem;
+    border-bottom: 2px solid var(--border-dim);
+    padding-bottom: 3rem;
+}
+
+.user-nav {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.user-identity {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    letter-spacing: 4px;
+}
+
+.user-identity span { color: var(--orange-primary); }
+
+.nav-utility-btn {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.7rem;
+    color: var(--text-main);
+    text-decoration: none;
+    letter-spacing: 2px;
+    padding: 0.8rem 1.8rem;
+    border: 1px solid var(--orange-primary);
+    background: rgba(255, 77, 0, 0.05);
+    transition: 0.4s;
+    position: relative;
+}
+
+.nav-utility-btn:hover {
+    background: var(--orange-primary);
+    color: #000;
+    box-shadow: 0 0 30px var(--orange-glow);
+}
+
+.cart-count-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #fff;
+    color: #000;
+    font-size: 0.6rem;
+    font-weight: 900;
+    padding: 0.2rem 0.5rem;
+    border-radius: 50%;
+}
+
+.logout-link {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-decoration: none;
+}
+
+/* SINGLE FOCUS GRID */
+.app-grid-focused {
+    display: flex;
+    justify-content: center;
+}
+
+.hero-card {
+    display: block;
+    width: 100%;
+    max-width: 800px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    padding: 7rem 5rem;
+    text-decoration: none;
+    transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-card:hover {
+    transform: translateY(-15px);
+    border-color: var(--orange-primary);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 40px rgba(255, 77, 0, 0.15);
+}
+
+.hero-card h2 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 3.5rem;
+    color: var(--text-main);
+    letter-spacing: 12px;
+    margin-bottom: 2rem;
+}
+
+.hero-card p {
+    font-family: 'Michroma', sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    line-height: 2.2;
+    max-width: 70%;
+}
+
+.hero-card .card-label {
+    position: absolute;
+    top: 3rem;
+    left: 4rem;
+    font-size: 0.6rem;
+    color: var(--orange-primary);
+    letter-spacing: 4px;
+}
+
+</style>
+
+<div class="dashboard-app-container">
+    <div class="top-bar">
+        <div class="user-identity">
+            SYSTEM_ID: <span>{{ request.user.phone_number }}</span>
+            <div style="margin-top: 1rem;">
+                <a href="{% url 'custom_logout' %}" class="logout-link">BACK TO LOGIN</a>
+            </div>
+        </div>
+        
+        <div class="user-nav">
+            <a href="{% url 'cart_view' %}" class="nav-utility-btn">
+                CART HUB
+                {% if cart_count > 0 %}
+                <span class="cart-count-badge">{{ cart_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{% url 'profile' %}" class="nav-utility-btn" style="border-color: var(--border-dim); background: transparent;">
+                [ PROFILE ]
+            </a>
+            <a href="{% url 'custom_logout' %}" class="nav-utility-btn" style="border-color: #ff4444; color: #ff4444; background: rgba(255, 68, 68, 0.05); margin-left: 1rem;">
+                [ LOGOUT ]
+            </a>
+        </div>
+    </div>
+
+    <div class="app-grid-focused">
+        <a href="{% url 'book_search' %}" class="hero-card glass-panel">
+            <span class="card-label michroma">COMMAND_01_RESERVE_SYSTEM_</span>
+        <h2>ADD_BOOKING </h2>
+            <p> RESERVE YOUR SEGMENT IN THE ACE STUDIOS ARENA HUB.</p>
+            <div style="margin-top: 3rem; color: var(--orange-primary); letter-spacing: 10px;"> START_SEQUENCE</div>
+        </a>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
